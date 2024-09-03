@@ -37,4 +37,52 @@ route.get('/:id', async (req, res) => {
     }
 });
 
+// Add a product
+route.post('/', async (req, res) => {
+    try {
+        const product = {
+            name: req.body.name,
+            price: req.body.price,
+            description: req.body.description,
+            image: req.body.image,
+            quantity: req.body.quantity
+        }
+        const newProduct = await Product.create(product);
+        res.json(newProduct);
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Update a product
+route.patch('/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const product = {
+            name: req.body.name,
+            price: req.body.price,
+            description: req.body.description,
+            image: req.body.image,
+            quantity: req.body.quantity
+        }
+        const newProduct = await Product.findByIdAndUpdate(product, id);
+        res.json(newProduct);
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Delete a product
+route.patch('/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        await Product.findByIdAndDelete(id);
+        res.json({message: `$id deleted successfully`});
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 module.exports = route;
