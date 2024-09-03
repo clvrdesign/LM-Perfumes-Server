@@ -19,14 +19,14 @@ route.get('/', async (req, res) => {
     }
 });
 
-// Fetch all products
+// Fetch a product by ID
 route.get('/:id', async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.params.id;
         const product = await Product.findById(id);
 
-        // Check if any products were found
-        if (product.length === 0) {
+        // Check if the product was found
+        if (!product) {
             return res.status(404).json({ message: 'No product found' });
         }
 
@@ -58,7 +58,7 @@ route.post('/', async (req, res) => {
 // Update a product
 route.patch('/:id', async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.params.id;
         const product = {
             name: req.body.name,
             price: req.body.price,
@@ -66,8 +66,8 @@ route.patch('/:id', async (req, res) => {
             image: req.body.image,
             quantity: req.body.quantity
         }
-        const newProduct = await Product.findByIdAndUpdate(product, id);
-        res.json(newProduct);
+        const updatedProduct = await Product.findByIdAndUpdate(id, product, { new: true });
+        res.json(updatedProduct);
 
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -75,14 +75,15 @@ route.patch('/:id', async (req, res) => {
 });
 
 // Delete a product
-route.patch('/:id', async (req, res) => {
+route.delete('/:id', async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.params.id;
         await Product.findByIdAndDelete(id);
-        res.json({message: `$id deleted successfully`});
+        res.json({ message: `${id} deleted successfully` });
 
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
+
 module.exports = route;
