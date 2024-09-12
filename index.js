@@ -13,6 +13,9 @@ app.use(express.json())
 // routes
 app.use('/products', products)
 app.use('/users', users)
+app.use('/*', (req, res)=>{
+    res.status(404).json({"message": "Error occurred"})
+})
 
 // connect to mongodb
 mongoose.connect(process.env.MONGO_URI)
