@@ -73,7 +73,17 @@ route.patch('/:id', async (req, res) => {
             email: req.body.email,
             password: req.body.password
         }
-        const updatedUser = await User.findByIdAndUpdate(id, user, { new: true });
+
+        var salt = bcrypt.genSaltSync(10);
+        var hash = bcrypt.hashSync(user.password, salt);
+
+        const new_user = {
+            name: user.name,
+            email: user.email,
+            password: hash
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(id, new_user, { new: true });
         res.json(updatedUser);
 
     } catch (err) {
